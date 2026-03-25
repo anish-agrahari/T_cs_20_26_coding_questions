@@ -2,41 +2,34 @@
 using namespace std;
 
 int main() {
-    int N;
-    cin >> N;
+    int n;
+    cin >> n;
+    cin.ignore();
 
-    // key = "sender receiver amount"
-    map<string, vector<int>> mp;
+    string line;
+    getline(cin, line);
 
-    for (int i = 0; i < N; i++) {
-        string sender, receiver;
-        int amount, time;
+    vector<pair<int,int>> pairs;
 
-        cin >> sender >> receiver >> amount >> time;
+    for (char &c : line)
+        if (c == ',') c = ' ';
 
-        string key = sender + " " + receiver + " " + to_string(amount);
-        mp[key].push_back(time);
-    }
+    stringstream ss(line);
+    string token;
 
-    set<string> result;
-
-    for (auto &it : mp) {
-        string key = it.first;
-        vector<int> times = it.second;
-
-        sort(times.begin(), times.end());
-
-        for (int i = 1; i < times.size(); i++) {
-            if (times[i] - times[i - 1] <= 60) {
-                result.insert(key + " " + to_string(times[i - 1]));
-                result.insert(key + " " + to_string(times[i]));
-            }
+    while (ss >> token) {
+        if (token.size() >= 2) {
+            int first  = token[0] - '0';
+            int second = token[1] - '0';
+            pairs.push_back({first, second});
         }
     }
 
-    // print result
-    for (auto &r : result) {
-        cout << r << endl;
+    sort(pairs.begin(), pairs.end());
+
+    for (int i = 0; i < (int)pairs.size(); i++) {
+        cout << pairs[i].first << pairs[i].second;
+        if (i != (int)pairs.size() - 1) cout << ",";
     }
 
     return 0;
